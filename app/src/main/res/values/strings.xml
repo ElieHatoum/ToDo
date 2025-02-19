@@ -6,4 +6,13 @@
     <string name="LOGIN">login</string>
     <string name="sign_up">Sign Up</string>
     <string name="Password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="don_t_have_an_account_sign_in">don_t_have_an_account_sign_in</string>
+    <string name="don_t_have_an_account_click_here_to_sign_up">Don\'t have an account ? Click here to Sign UP</string>
+    <string name="sign_up_now">Sign Up now</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="login_redirect">Login</string>
+    <string name="already_have_an_account">Already have an account ?</string>
+    <string name="home">Home</string>
+    <string name="logout">logout</string>
 </resources>
