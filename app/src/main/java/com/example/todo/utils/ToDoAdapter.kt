@@ -1,6 +1,7 @@
 package com.example.todo.utils
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todo.databinding.TodoItemBinding
@@ -24,6 +25,16 @@ class ToDoAdapter(private val list : MutableList<TodoData>) : RecyclerView.Adapt
             with(list[position]){
                 binding.todoTask.text = this.taskTitle
                 binding.todoTaskDescription.text = this.taskDescription
+
+                binding.todoTaskDescription.visibility = View.GONE
+
+                binding.root.setOnClickListener{
+                    if (binding.todoTaskDescription.visibility == View.VISIBLE) {
+                        binding.todoTaskDescription.visibility = View.GONE
+                    } else {
+                        binding.todoTaskDescription.visibility = View.VISIBLE
+                    }
+                }
 
                 binding.deleteTask.setOnClickListener{
                     listener?.onDeleteTask(this)

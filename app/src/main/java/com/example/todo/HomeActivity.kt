@@ -77,23 +77,26 @@ class HomeActivity : AppCompatActivity(), AddTaskFragment.AddTaskButtonListener,
         popUpFragment.show(supportFragmentManager, "AddTaskFragment")
     }
 
-    private fun fetchData(){
-        val userId = auth.currentUser?.uid
-        db.collection("users").document(userId.toString()).collection("tasks").get().addOnSuccessListener { snapshot ->
-            for(document in snapshot.documents){
-                val task = TodoData(
-                    taskId = document.id,
-                    taskTitle = document.getString("title")?: "untitled",
-                    taskDescription = document.getString("description")?: "No description"
-                )
-                if(mList.indexOf(task) == -1){
+    private fun fetchData() {
+        val userId = auth.currentUser?.uid ?: return
+        db.collection("users").document(userId).collection("tasks")
+            .orderBy("timestamp")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                mList.clear()
+                for (document in snapshot.documents) {
+                    val task = TodoData(
+                        taskId = document.id,
+                        taskTitle = document.getString("title") ?: "Untitled",
+                        taskDescription = document.getString("description") ?: "No description"
+                    )
                     mList.add(task)
-                    adapter.notifyItemInserted(mList.indexOf(task))
+                    adapter.notifyItemInserted(mList.size - 1)
                 }
             }
-        }.addOnFailureListener{ e ->
-            Toast.makeText(this, "Failed to fetch tasks: ${e.message}", Toast.LENGTH_SHORT).show()
-        }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to fetch tasks: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onAddTask(
@@ -102,20 +105,28 @@ class HomeActivity : AppCompatActivity(), AddTaskFragment.AddTaskButtonListener,
         taskTitleEt: TextInputEditText,
         taskDescriptionEt: TextInputEditText
     ) {
-        val userId = auth.currentUser?.uid
+        val userId = auth.currentUser?.uid ?: return
 
         val taskData = mapOf(
             "title" to taskTitle,
             "description" to taskDescription,
+            "timestamp" to System.currentTimeMillis()
         )
 
-        db.collection("users").document(userId.toString()).collection("tasks")
-            .add(taskData) // Generates a unique task ID
-            .addOnSuccessListener {
+        db.collection("users").document(userId).collection("tasks")
+            .add(taskData)
+            .addOnSuccessListener { documentReference ->
                 Toast.makeText(this, "Task added successfully!", Toast.LENGTH_SHORT).show()
                 taskTitleEt.text = null
                 taskDescriptionEt.text = null
-                fetchData()
+
+                val newTask = TodoData(
+                    taskId = documentReference.id,
+                    taskTitle = taskTitle,
+                    taskDescription = taskDescription
+                )
+                mList.add(newTask)
+                adapter.notifyItemInserted(mList.size - 1)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Failed to add task: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -123,6 +134,7 @@ class HomeActivity : AppCompatActivity(), AddTaskFragment.AddTaskButtonListener,
 
         popUpFragment.dismiss()
     }
+
 
     override fun onDeleteTask(toDoData: TodoData) {
         val userId = auth.currentUser?.uid
@@ -139,8 +151,41 @@ class HomeActivity : AppCompatActivity(), AddTaskFragment.AddTaskButtonListener,
             }
     }
 
+    override fun onUpdateTask(
+        taskId: String,
+        newTaskTitle: String,
+        newTaskDescription: String,
+        taskTitleEt: TextInputEditText,
+        taskDescriptionEt: TextInputEditText
+    ) {
+        val userId = auth.currentUser?.uid ?: return
+        val updatedData = mapOf(
+            "tile" to newTaskTitle,
+            "description" to newTaskDescription
+        )
+
+        db.collection("users").document(userId).collection("tasks").document(taskId)
+            .update(updatedData).addOnSuccessListener {
+                Toast.makeText(this, "Task updated !", Toast.LENGTH_SHORT).show()
+
+                val index = mList.indexOfFirst { it.taskId == taskId }
+                if(index != -1){
+                    mList[index] = mList[index].copy(taskTitle = newTaskTitle, taskDescription = newTaskDescription)
+                    adapter.notifyItemChanged(index)
+                }
+                popUpFragment.dismiss()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Failed to update task: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+
+    }
+
     override fun onEditTask(toDoData: TodoData) {
-        TODO("Not yet implemented")
+        popUpFragment = AddTaskFragment()
+        popUpFragment.setListener(this)
+        popUpFragment.setTaskToEdit(toDoData)
+        popUpFragment.show(supportFragmentManager, "EditTaskFragment")
     }
 
 }

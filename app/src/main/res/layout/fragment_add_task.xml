@@ -59,9 +59,7 @@
                 android:layout_height="match_parent"
                 android:padding="12dp"
                 android:gravity="start"
-                android:textAlignment="viewStart"
-                android:minLines="3"
-                android:maxLines="5" />
+                android:textAlignment="viewStart" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
