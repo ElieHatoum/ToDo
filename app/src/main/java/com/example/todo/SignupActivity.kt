@@ -15,7 +15,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuthException
 import java.lang.Exception
 
-class Signup : AppCompatActivity() {
+class SignupActivity : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
     private lateinit var binding : ActivitySignupBinding
 
@@ -51,7 +51,7 @@ class Signup : AppCompatActivity() {
         }
 
         binding.tvRedirectLogin.setOnClickListener{
-            val intent = Intent(this, Login::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }
@@ -60,7 +60,7 @@ class Signup : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){ task ->
             if(task.isSuccessful){
-                val intent = Intent(this, Login::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
             }else{

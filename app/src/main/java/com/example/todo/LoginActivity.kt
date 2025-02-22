@@ -11,7 +11,7 @@ import com.example.todo.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 
-class Login : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
     private lateinit var auth : FirebaseAuth
     private lateinit var binding : ActivityLoginBinding
 
@@ -39,7 +39,7 @@ class Login : AppCompatActivity() {
         }
 
         binding.tvRedirectSignUp.setOnClickListener{
-            val intent = Intent(this, Signup::class.java)
+            val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
         }
     }
@@ -47,7 +47,7 @@ class Login : AppCompatActivity() {
     private fun login(email : String, password : String){
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this){task ->
             if(task.isSuccessful){
-                val intent = Intent(this, Home::class.java)
+                val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
                 finish()
             }else{

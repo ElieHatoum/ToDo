@@ -13,6 +13,14 @@
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="login_redirect">Login</string>
     <string name="already_have_an_account">Already have an account ?</string>
-    <string name="home">Home</string>
+    <string name="home">ToDo</string>
     <string name="logout">logout</string>
+    <string name="task">Task</string>
+    <string name="task_title">Task Title</string>
+    <string name="task_description">Task Description …</string>
+    <string name="add_task">Add Task</string>
+    <string name="close_bt">close_bt</string>
+    <string name="test_1">test 1</string>
+    <string name="delete_task">delete_task</string>
+    <string name="edit_task">edit_task</string>
 </resources>
