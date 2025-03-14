@@ -1,7 +1,7 @@
 # To-Do App 📝
 
 ## About  
-The goal of this personal project is to learn mobile development through hands-on experience by building a simple yet functional application.
+This project seeks to construct a simple yet highly functional application. During its development, a diverse set of newly gained mobile development abilities were applied.
 
 ## Features  
 - User authentication (Login & Signup)  
